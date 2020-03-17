@@ -20,22 +20,36 @@ public class BaseRepositoryImpl<T, ID extends Number> extends SimpleJpaRepositor
 
 	@Override
 	public List<T> search(String jpql, Map<String, Object> params) {
-		TypedQuery<T> query = em.createQuery(jpql, getDomainClass());
-		
+		return getList(em.createQuery(jpql, getDomainClass()), params);
+	}
+
+	@Override
+	public Long searchCount(String jpql, Map<String, Object> params) {
+		return getSingle(em.createQuery(jpql, Long.class), params);
+	}
+
+
+	@Override
+	public List<T> findByNamedQuery(String query, Map<String, Object> params) {
+		return getList(em.createNamedQuery(query, getDomainClass()), params);
+	}
+	
+	@Override
+	public Long findCountByNamedQuuery(String query, Map<String, Object> params) {
+		return getSingle(em.createQuery(query, Long.class), params);
+	}
+	
+	private List<T> getList(TypedQuery<T> query, Map<String, Object> params) {
 		for(String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
 		return query.getResultList();
 	}
 
-	@Override
-	public Long searchCount(String jpql, Map<String, Object> params) {
-		TypedQuery<Long> query = em.createQuery(jpql, Long.class);
-		
+	private<L> L getSingle(TypedQuery<L> query, Map<String, Object> params) {
 		for(String key : params.keySet()) {
 			query.setParameter(key, params.get(key));
 		}
 		return query.getSingleResult();
 	}
-
 }

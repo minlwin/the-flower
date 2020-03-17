@@ -11,5 +11,9 @@ public interface BaseRepository<T, ID extends Number> extends JpaRepository<T, I
 
 	List<T> search(String jpql, Map<String, Object> params);
 	
+	List<T> findByNamedQuery(String query, Map<String, Object> params);
+
 	Long searchCount(String jqpl, Map<String, Object> params);
+
+	Long findCountByNamedQuuery(String query, Map<String, Object> params);
 }
